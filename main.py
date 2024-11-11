@@ -3,9 +3,29 @@ import random
 from datetime import datetime
 
 def botMoves(board):
+
+    # generate all legal moves 
+    
+    #best_score = 0 
+    #best_move = None 
+
+    # for all moves in legal_moves 
+        # for all moves available to other side after move is made 
+        # score = score for white move = score for other move 
+        # if score > best score 
+            #best_score = score 
+            # best_move = move 
+    
+    # return best_move 
+
+
+
+
     capture_moves = [move for move in board.legal_moves if board.is_capture(move)]
     if capture_moves:
         return random.choice(capture_moves)
+    
+    
     else:
         return random.choice(list(board.legal_moves))
 
