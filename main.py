@@ -2,6 +2,15 @@ import chess
 import random
 from datetime import datetime
 
+PIECE_VALUES = {
+    chess.PAWN: 1,
+    chess.KNIGHT: 3,
+    chess.BISHOP: 3,
+    chess.ROOK: 5,
+    chess.QUEEN: 9,
+    chess.KING: 1000  
+}
+
 def botMoves(board):
 
     # generate all legal moves 
