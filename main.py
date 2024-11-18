@@ -53,17 +53,25 @@ def botMoves(board):
     
     # return best_move 
 
-
-    capture_moves = [move for move in board.legal_moves if board.is_capture(move)]
-    if capture_moves:
-        choice = random.choice(capture_moves)
-        captured_peice = board.piece_type_at(choice.to_square)
-        print("capture:", captured_peice)
-        return choice 
-    
-    
+        _, best_move = minimax(board, depth, board.turn == chess.WHITE)
+    if best_move:
+        board.push(best_move)
+        print(f"Bot played: {best_move.uci()}")
+        print("New FEN position:", board.fen())
     else:
-        return random.choice(list(board.legal_moves))
+        print("No valid moves available. Game over.")
+
+
+ #   capture_moves = [move for move in board.legal_moves if board.is_capture(move)]
+ #   if capture_moves:
+ #       choice = random.choice(capture_moves)
+ #       captured_peice = board.piece_type_at(choice.to_square)
+ #       print("capture:", captured_peice)
+ #       return choice 
+    
+    
+ #   else:
+ #       return random.choice(list(board.legal_moves))
 
 def print_board(board):
     print("Current Board:")
