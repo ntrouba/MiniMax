@@ -87,6 +87,15 @@ def user_input(board):
         except ValueError:
             print("Invalid input format. Please enter a move in UCI format (e.g., e2e4).")
 
+def evaluate_board(board):
+    score = 0
+    for square in chess.SQUARES:
+        piece = board.piece_at(square)
+        if piece:
+            value = PIECE_VALUES.get(piece.piece_type, 0)
+            score += value if piece.color == chess.WHITE else -value
+    return score
+
 def main():
     print("=====================================================")
     print("             CS 290 Chess Bot Version 0.1            ")
