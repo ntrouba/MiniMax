@@ -11,6 +11,32 @@ PIECE_VALUES = {
     chess.KING: 1000  
 }
 
+def minimax(board, depth, maximizing_player):
+    if depth == 0 or board.is_game_over():
+        return evaluate_board(board), None
+
+    best_move = None
+    if maximizing_player:  # White's turn (maximize score)
+        max_eval = float('-inf')
+        for move in board.legal_moves:
+            board.push(move)
+            eval, _ = minimax(board, depth - 1, False)
+            board.pop()
+            if eval > max_eval:
+                max_eval = eval
+                best_move = move
+        return max_eval, best_move
+    else:  # Black's turn (minimize score)
+        min_eval = float('inf')
+        for move in board.legal_moves:
+            board.push(move)
+            eval, _ = minimax(board, depth - 1, True)
+            board.pop()
+            if eval < min_eval:
+                min_eval = eval
+                best_move = move
+        return min_eval, best_move
+
 def botMoves(board):
 
     # generate all legal moves 
