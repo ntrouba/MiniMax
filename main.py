@@ -28,11 +28,12 @@ def botMoves(board):
     # return best_move 
 
 
-
-
     capture_moves = [move for move in board.legal_moves if board.is_capture(move)]
     if capture_moves:
-        return random.choice(capture_moves)
+        choice = random.choice(capture_moves)
+        captured_peice = board.piece_type_at(choice.to_square)
+        print("capture:", captured_peice)
+        return choice 
     
     
     else:
