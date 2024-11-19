@@ -62,10 +62,10 @@ def evaluate_board(board):
     score = 0
     for square in chess.SQUARES:  
         piece = board.piece_at(square)
-        print(piece)
+        #print(piece)
         if piece != None:
             value = PIECE_VALUES.get(piece.piece_type, 0)
-            print(value)
+            #print(value)
             if piece.color == chess.WHITE:
                 score += value 
             elif piece.color == chess.BLACK: 
@@ -92,11 +92,22 @@ def firstStep(board:chess.Board, player:str) -> chess.Move:
             temp2.push(opponent_move)
             s = evaluate_board(temp2)
             #print(temp2)
-            #print(s)
-            if s > best_score:
-                print("s is better")
-                best_score = s 
-                best_move = player_move
+            print("Player move:" , player_move, "opponent move:", opponent_move, "score:", s)
+
+            # if playing as white, maximize score 
+            if player == 'w':
+                if s > best_score:
+                    best_score = s 
+                    best_move = player_move
+                    print("s is better:", best_move, best_score)
+            
+            # if playing as black, minimize the scoe 
+            elif player == 'b': 
+                if s < best_score: 
+                    best_score = s 
+                    best_move = player_move 
+                    print("s is better:", best_move, best_score)
+
 
     return best_move 
     
@@ -106,19 +117,25 @@ def firstStep(board:chess.Board, player:str) -> chess.Move:
 
 
 
-def botMoves(board:chess.Board):
+def botMoves(board:chess.Board, player:str):
 
-    depth = 3
-
+    ## working first milestone code 
     board_copy = board.copy() 
-
-
-   # _, best_move = minimax(board_copy, depth, board.turn == chess.WHITE)
-    best_move = firstStep(board_copy, 'w')
+   
+    best_move = firstStep(board_copy, player)
     board.push(best_move)
     print(f"Bot played: {best_move.uci()}")
     print("New FEN position:", board.fen())
-    print("New board:", board)
+
+
+    ##minimax code and psuedocode, still in development 
+
+
+    #depth = 3
+    # _, best_move = minimax(board_copy, depth, board.turn == chess.WHITE)
+
+
+    #print("New board:", board)
     # else:
     #     print("No valid moves available. Game over.")
         #return None 
@@ -190,6 +207,13 @@ def main():
     
     ##TODO bot color variable 
 
+    if player_color == 'w':
+        bot_color:str = 'b'
+    elif player_color == 'b':
+        bot_color:str = 'w'
+    else:
+        print("error")
+
     
     starting_FEN = input("Starting FEN position? (hit ENTER for standard starting position): ").strip()
     if starting_FEN:
@@ -197,7 +221,7 @@ def main():
     else:
         board = chess.Board() 
 
-    print("value of board:", evaluate_board(board))
+    #print("value of board:", evaluate_board(board))
 
    
     while not board.is_game_over():
@@ -207,7 +231,7 @@ def main():
             user_input(board)
         else:
             print("Bot is thinking...")
-            bot_move = botMoves(board)
+            bot_move = botMoves(board, bot_color)
             #print("bot move:", bot_move)
             #update_board(board, bot_move)
             #print(f"Bot played: {bot_move.uci()}")
