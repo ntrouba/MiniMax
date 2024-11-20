@@ -11,7 +11,6 @@ PIECE_VALUES = {
 }
 
 def evaluate_board(board):
-
     score = 0
     for square in chess.SQUARES:
         piece = board.piece_at(square)
@@ -20,37 +19,43 @@ def evaluate_board(board):
             score += value if piece.color == chess.WHITE else -value
     return score
 
-def firstStep(board: chess.Board, player: str) -> chess.Move:
+def Max(board, depth):
+    if depth == 0 or board.is_game_over():
+        return evaluate_board(board), None
 
-    if player == 'w':
-        best_score = float('-inf')
-    else:
-        best_score = float('inf')
+    max_eval = float('-inf')
+    best_move = None
 
-    best_move = chess.Move.null()  
+    for move in board.legal_moves:
+        new_board = board.copy()
+        new_board.push(move)
+        eval, _ = Min(new_board, depth - 1)
+        if eval > max_eval:
+            max_eval = eval
+            best_move = move
 
-    for player_move in board.legal_moves:
-        temp_board = board.copy()
-        temp_board.push(player_move)
-      
-        for opponent_move in temp_board.legal_moves:
-            temp_board2 = temp_board.copy()
-            temp_board2.push(opponent_move)
-            score = evaluate_board(temp_board2)
+    return max_eval, best_move
 
-            if player == 'w' and score > best_score:
-                best_score = score
-                best_move = player_move
-            elif player == 'b' and score < best_score:
-                best_score = score
-                best_move = player_move
+def Min(board, depth):
+    if depth == 0 or board.is_game_over():
+        return evaluate_board(board), None
 
-    return best_move
+    min_eval = float('inf')
+    best_move = None
 
-def botMoves(board: chess.Board, player: str):
+    for move in board.legal_moves:
+        new_board = board.copy()
+        new_board.push(move)
+        eval, _ = Max(new_board, depth - 1)
+        if eval < min_eval:
+            min_eval = eval
+            best_move = move
 
-    best_move = firstStep(board, player)
-    if best_move != chess.Move.null():
+    return min_eval, best_move
+
+def botMoves(board, depth=2):
+    _, best_move = Max(board, depth)
+    if best_move:
         board.push(best_move)
         print(f"Bot played: {best_move.uci()}")
         print("New FEN position:", board.fen())
@@ -62,7 +67,7 @@ def print_board(board):
     print(board)
     print("FEN position:", board.fen())
 
-def update_board(board: chess.Board, move: chess.Move):
+def update_board(board, move):
     board.push(move)
     print_board(board)
 
@@ -81,7 +86,7 @@ def user_input(board):
 
 def main():
     print("=====================================================")
-    print("             CS 290 Chess Bot Version 0.1            ")
+    print("             Chess Bot with Minimax Algorithm        ")
     print("=====================================================")
     print("Time:", datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
 
@@ -108,7 +113,7 @@ def main():
             user_input(board)
         else:
             print("Bot is thinking...")
-            botMoves(board, bot_color)
+            botMoves(board, depth=3)  
 
     if board.is_checkmate():
         print("Checkmate!")
