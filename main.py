@@ -53,8 +53,11 @@ def Min(board, depth):
 
     return min_eval, best_move
 
-def botMoves(board, depth=2):
-    _, best_move = Max(board, depth)
+def botMoves(board, depth:int, bot_color):
+    if bot_color == 'w':
+        _, best_move = Max(board, depth)
+    else: 
+        _, best_move = Min(board, depth)
     if best_move:
         board.push(best_move)
         print(f"Bot played: {best_move.uci()}")
@@ -113,7 +116,7 @@ def main():
             user_input(board)
         else:
             print("Bot is thinking...")
-            botMoves(board, depth=3)  
+            botMoves(board, 3, bot_color)  
 
     if board.is_checkmate():
         print("Checkmate!")
